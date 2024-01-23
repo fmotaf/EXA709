@@ -39,23 +39,27 @@ def number_of_male_female():
     }
 
 
-def plot_females_males():
-    number_males = number_of_male_female().get("males")
-    number_females = number_of_male_female().get("females")
+def plot_females_males(dist_males_females:dict):
+    number_males = dist_males_females.get("males")
+    number_females = dist_males_females.get("females")
 
     print('number_Males', number_males)
     print('number_feMales', number_females)
 
     data = [number_males, number_females]
     colors = plt.get_cmap('Blues')(np.linspace(0.2, 0.7, len(data)))
+    sizes = np.array(data)
+    def absolute_value(val):
+        a = np.round(val/100.*sizes.sum(), 0)
+        return a
     #plot
     fig, ax = plt.subplots()
-    ax.pie(data, colors=colors, radius=3, center=(4,4), wedgeprops={"linewidth": 1, "edgecolor": "white"}, frame=True)
+    ax.pie(data, colors=colors, radius=3, center=(4,4), wedgeprops={"linewidth": 1, "edgecolor": "white"}, autopct=absolute_value ,frame=True)
     ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
            ylim=(0, 8), yticks=np.arange(1, 8))
-    men_patch = mpatches.Patch(color='#d0e1f2', label="Homens = 36")
-    women_patch = mpatches.Patch(color='#2e7ebc', label="Mulheres = 27")
-    ax.legend(handles=[women_patch, men_patch])
+    men_patch = mpatches.Patch(color='#d0e1f2', label="Homens")
+    women_patch = mpatches.Patch(color='#2e7ebc', label="Mulheres")
+    ax.legend(handles=[men_patch, women_patch])
     plt.show()
 
 # def plot_pie(legend:list, data:dict):
@@ -91,25 +95,23 @@ def do_you_work():
             "not_working": not_working
         }
 
-def plot_working_not_working():
-
-    number_working = number_of_male_female().get("males")
-    number_not_working = number_of_male_female().get("females")
-
-    print('number_Males', number_males)
-    print('number_feMales', number_females)
-
-    data = [number_males, number_females]
-    colors = plt.get_cmap('Blues')(np.linspace(0.2, 0.7, len(data)))
-    #plot
+def plot_working_not_working(dist_working_not_working:dict):
+    # plt.style.use('_mpl-gallery')
+    number_working = dist_working_not_working.get("working")
+    number_not_working = dist_working_not_working.get("not_working")
+    x = 0.5 + np.arange(2)
+    y = [number_working, number_not_working]
+    # plot
     fig, ax = plt.subplots()
-    ax.pie(data, colors=colors, radius=3, center=(4,4), wedgeprops={"linewidth": 1, "edgecolor": "white"}, frame=True)
-    ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
-           ylim=(0, 8), yticks=np.arange(1, 8))
-    men_patch = mpatches.Patch(color='#d0e1f2', label="Homens = 36")
-    women_patch = mpatches.Patch(color='#2e7ebc', label="Mulheres = 27")
-    ax.legend(handles=[women_patch, men_patch])
+    bar_labels = ["trabalham", "não trabalham"]
+    bar_colors = ["tab:blue", "tab:red"]
+    ax.bar(x, y, width=0.5, edgecolor="white", linewidth=1, label=bar_labels, color=bar_colors)
+    ax.set_title("distribuição considerando os alunos que trabalham e não trabalham")
+    ax.set(xlim=(0, 3), xticks=np.arange(1, 10),
+        ylim=(0, 40), yticks=np.arange(1, 40))
+    ax.legend(title="distribuicao entre alunos que trabalham/não trabalham")
     plt.show()
+
 
 def who_do_you_live_with():
     parents = 0
@@ -125,7 +127,34 @@ def who_do_you_live_with():
         else:
             friends += 1
 
-    print("parents = ", parents, "solo = ", solo, "friends = ", friends)
+    return {
+        "parents":parents, 
+        "solo": solo, 
+        "friends": friends
+    }
+
+def plot_habitation(answer_habitation:dict):
+    number_parents = answer_habitation.get("parents")
+    number_solo = answer_habitation.get("solo")
+    number_friends = answer_habitation.get("friends")
+
+    data = [number_parents, number_solo, number_friends]
+    colors = plt.get_cmap('Blues')(np.linspace(0.2, 0.7, len(data)))
+    sizes = np.array(data)
+    def absolute_value(val):
+        a = np.round(val/100.*sizes.sum(), 0)
+        return a
+    #plot
+    fig, ax = plt.subplots()
+    ax.pie(data, colors=colors, radius=3, center=(4,4), wedgeprops={"linewidth": 1, "edgecolor": "white"}, autopct=absolute_value ,frame=True)
+    ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
+           ylim=(0, 8), yticks=np.arange(1, 8))
+    parents_patch = mpatches.Patch(color='#d0e1f2', label="Pais")
+    solo_patch = mpatches.Patch(color='#7fb9da', label="Sozinho")
+    friends_patch = mpatches.Patch(color='#2e7ebc', label="Amigos")
+    ax.legend(handles=[parents_patch, solo_patch, friends_patch])
+    plt.show()
+
 
 def filter_study_hours():
     real_answers = []
@@ -137,11 +166,30 @@ def filter_study_hours():
 
 def get_avg_study_hours(answers_in_hours:list):
     sum = 0
-    
+    print(answers_in_hours)
+
     for answer in answers_in_hours:
-        sum += answer
+        sum += int(answer)
     
     return sum/len(answers_in_hours)
+
+def plot_avg_study_hours(avg_stdy_hours:float):
+    plt.style.use('_mpl-gallery')
+    x = 0.5 + np.arange(1)
+    y = [avg_stdy_hours]
+    # plot
+    fig, ax = plt.subplots()
+    bar_labels = ["Media de horas de estudo"]
+    ax.bar(x, y, width=0.5, edgecolor="white", linewidth=1, label=bar_labels, color="tab:blue")
+    ax.set_title("Numero medio de estudo em horas")
+    ax.set(xlim=(0, 3), xticks=np.arange(1, 5),
+        ylim=(0, 10), yticks=np.arange(1, 10))
+    ax.legend(title="Valor médio do tempo dedicado aos estudos pelos participantes")
+    plt.show()
+
+def plot_trend_study_hours():
+    pass
+
 
 def get_study_hours_frequencies(answers_in_hours:list):
     occurrences = {}
@@ -217,7 +265,7 @@ def confirm_hpt_1():
     period = file["Período"]
     work = file["Você trabalha?"]
 
-    hpt1_true = 0
+    hpt1_true = false
     trabalha_e_noturno = 0
     trabalha_e_vespertino = 0
 
@@ -253,8 +301,24 @@ def confirm_hpt_2(dispositivos_mais_usados:dict):
     # print(dispositivos_mais_usados.values())
 
 if __name__ == "__main__":
-    # avg_age()
-    # number_of_male_female()
+    
+########################################################################################################################
+    # cria grafico das respostas se trabalha (sim/ nao)    
+    dist_working_not_working = do_you_work()
+    plot_working_not_working(dist_working_not_working)
+
+########################################################################################################################
+    # cria grafico da distribuicao do tipo de habitacao (sozinho, familia, amigos)
+    habitation = who_do_you_live_with()
+    plot_habitation(habitation)
+
+########################################################################################################################
+    # cria grafico de tempo medio de estudo
+    filtered_answers_study_hours = filter_study_hours()
+    avg_study_hours = get_avg_study_hours(filtered_answers_study_hours)
+    plot_avg_study_hours(avg_study_hours)
+
+
     # do_you_work()
     # who_do_you_live_with()
     # answers_filtered = filter_study_hours()
@@ -268,5 +332,5 @@ if __name__ == "__main__":
     # dispositivo_mais_usado = get_most_used_device()
     # confirm_hpt_2(dispositivo_mais_usado)
     # plot_females_males()
-    male_female = number_of_male_female()
-    plot_pie(legend=["males","females"], data=male_female)
+    # male_female = number_of_male_female()
+    # plot_pie(legend=["males","females"], data=male_female)
