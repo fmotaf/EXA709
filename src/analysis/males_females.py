@@ -1,27 +1,17 @@
+import _fix_import
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
-import dataset
-import plot
+import utils.dataset as dataset
+import utils.plot as plot
+import utils.filters as filters
 
 
 def number_of_male_female():
-    """
-    Coleta as respostas a pergunta
-    Gênero (masculino/ feminino)
-    """
-
-    males = 0
-    females = 0
-
-    for person in dataset.file["Gênero"]:
-        if person == "Masculino":
-            males += 1
-        else:
-            females += 1
-
-    # print("males =",males, "females =",females)
-    return {"males": males, "females": females}
+    return filters.answers(
+        dataset.file, "Gênero", {"Masculino": "males", "Feminino": "females"}
+    )
 
 
 def plot_females_males(dist_males_females: dict):
@@ -65,12 +55,9 @@ def plot_females_males(dist_males_females: dict):
     plt.show()
 
 
-
-
 def run():
-    # plot_females_males()
     male_female = number_of_male_female()
-    plot.pie(legend=["males","females"], data=male_female)
+    plot.pie(legend={"males": "Homens", "females": "Mulheres"}, data=male_female)
 
 
 if __name__ == "__main__":

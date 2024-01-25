@@ -1,25 +1,16 @@
+import _fix_import
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
-import dataset
+import utils.dataset as dataset
+import utils.filters as filters
 
 
 def do_you_work():
-    """
-    Coleta as respostas a pergunta
-    Trabalha? (sim/ não) em um dicionário
-    """
-
-    working = 0
-    not_working = 0
-
-    for answer in dataset.file["Você trabalha?"]:
-        if answer == "Sim":
-            working += 1
-        else:
-            not_working += 1
-
-    return {"working": working, "not_working": not_working}
+    return filters.answers(
+        dataset.file, "Você trabalha?", {"Não": "not_working", "Sim": "working"}
+    )
 
 
 def plot_working_not_working(dist_working_not_working: dict):

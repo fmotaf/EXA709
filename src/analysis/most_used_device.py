@@ -1,33 +1,22 @@
+import _fix_import
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
-import dataset
+import utils.dataset as dataset
+import utils.filters as filters
 
 
 def get_most_used_device():
-    column_device = dataset.file["Qual o dispositivo que você mais acessa?"]
-
-    computer_count = 0
-    smartphone_count = 0
-    tablet_count = 0
-
-    occurrences = {"computer_counter": 0, "smartphone_counter": 0, "tablet_counter": 0}
-
-    for occurrence in column_device:
-        if occurrence == "Computador/Notebook":
-            occurrences["computer_counter"] += 1
-        elif occurrence == "Celular":
-            occurrences["smartphone_counter"] += 1
-        else:
-            occurrences["tablet_counter"] += 1
-
-    # greatest_occurrence = max(occurrences["computer_count"], occurrences["smartphone_count"], occurrences["tablet_count"])
-    # print(">>>>",max(occurrences.values()))
-    # print("aaaah = ",occurrences.keys(max(occurrences.values())))
-    print("occurrences")
-    print(occurrences)
-    return occurrences
-    # return occurrences[occurrences[max(occurrences.values())]]
+    return filters.answers(
+        dataset.file,
+        "Qual o dispositivo que você mais acessa?",
+        {
+            "Computador/Notebook": "computer_counter",
+            "Celular": "smartphone_counter",
+            "Tablet": "tablet_counter",
+        },
+    )
 
 
 def plot_most_used_device(devices_result: dict):

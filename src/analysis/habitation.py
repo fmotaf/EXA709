@@ -1,23 +1,18 @@
+import _fix_import
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
-import dataset
+import utils.dataset as dataset
+import utils.filters as filters
 
 
 def who_do_you_live_with():
-    parents = 0
-    solo = 0
-    friends = 0
-
-    for answer in dataset.file["Mora com quem?"]:
-        if answer == "Família":
-            parents += 1
-        elif answer == "Só":
-            solo += 1
-        else:
-            friends += 1
-
-    return {"parents": parents, "solo": solo, "friends": friends}
+    return filters.answers(
+        dataset.file,
+        "Mora com quem?",
+        {"Família": "parents", "Só": "solo", "Amigos": "friends"},
+    )
 
 
 def plot_habitation(answer_habitation: dict):

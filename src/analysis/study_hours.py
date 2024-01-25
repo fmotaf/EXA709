@@ -1,6 +1,9 @@
+import _fix_import
+
 import matplotlib.pyplot as plt
 import numpy as np
-import filters
+import utils.dataset as dataset
+import utils.filters as filters
 
 
 def get_study_hours_frequencies(answers_in_hours: list):
@@ -51,7 +54,7 @@ def plot_stdy_hours_frequencies(occurrences: dict):
 
 
 def run():
-    stdy_hrs = filters.study_hours()
+    stdy_hrs = filters.study_hours(dataset.file)
     stdy_hours_frequencies = get_study_hours_frequencies(stdy_hrs)
     print(stdy_hours_frequencies)
     plot_stdy_hours_frequencies(stdy_hours_frequencies)

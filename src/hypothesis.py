@@ -1,10 +1,10 @@
-import most_used_device
-import work
-import study
-import study_hours
-import habitation
-import dataset
-import filters
+import analysis.most_used_device as most_used_device
+import analysis.work as work
+import analysis.study as study
+import analysis.study_hours as study_hours
+import analysis.habitation as habitation
+import utils.dataset as dataset
+import utils.filters as filters
 
 
 # HIPOTESES:
@@ -76,7 +76,7 @@ def confirm_hpt_2(dispositivos_mais_usados: dict):
 if __name__ == "__main__":
     work.do_you_work()
     habitation.who_do_you_live_with()
-    answers_filtered = filters.study_hours()
+    answers_filtered = filters.study_hours(dataset.file)
     print(study.get_avg_study_hours(answers_filtered))
     frequencies = study_hours.get_study_hours_frequencies(answers_filtered)
     # print("trend counter = ", get_trend_study_hours(answers_filtered))

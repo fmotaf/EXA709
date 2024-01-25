@@ -1,30 +1,21 @@
+import _fix_import
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
-import dataset
+import utils.dataset as dataset
+import utils.filters as filters
 
 
 def get_period() -> dict:
-    """
-    Returna um dicionario contendo as
-    respostas para a pergunta Turno (vespertino / noturno)
-    """
-
-    column_period = dataset.file["Período"]
-
-    students_verspetine_counter = 0
-    students_night_counter = 0
-
-    for occurrence in column_period:
-        if occurrence == "Noturno":
-            students_night_counter += 1
-        else:
-            students_verspetine_counter += 1
-
-    return {
-        "students_verspetine_counter": students_verspetine_counter,
-        "students_night_counter": students_night_counter,
-    }
+    return filters.answers(
+        dataset.file,
+        "Período",
+        {
+            "Noturno": "students_night_counter",
+            "Diurno": "students_verspetine_counter",
+        },
+    )
 
 
 def plot_student_period(dist_vespertine_night: dict):

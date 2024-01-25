@@ -1,4 +1,7 @@
-import dataset
+import _fix_import
+
+import utils.dataset as dataset
+
 
 def calculate_avg(column):
     sum = 0

@@ -1,7 +1,10 @@
+import _fix_import
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
-import filters
+import utils.dataset as dataset
+import utils.filters as filters
 
 
 def get_avg_study_hours(answers_in_hours: list) -> float:
@@ -38,7 +41,7 @@ def plot_avg_study_hours(avg_stdy_hours: float):
 
 
 def run():
-    filtered_answers_study_hours = filters.study_hours()
+    filtered_answers_study_hours = filters.study_hours(dataset.file)
     avg_study_hours = get_avg_study_hours(filtered_answers_study_hours)
     plot_avg_study_hours(avg_study_hours)
 
