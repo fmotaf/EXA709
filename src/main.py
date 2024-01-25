@@ -3,23 +3,46 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import numpy as np
 
-# plt.subplots_adjust(left=0.04, bottom=0.04, right=0.94, top=0.94)
 file = pd.read_excel("Respostas.xlsx")
 
-def calculate_avg(column):
-    sum = 0
-    for row in column:
-        sum += row
-    avg = sum/len(column)
 
 def avg_age():
     sum = 0
-    print(type(file["Idade"]))
     for age in file["Idade"]:
         sum += age
 
     avg = sum/len(file["Idade"])
     return avg
+
+
+def get_age_students() -> dict:
+    occurrences = {}
+    for answer in file["Idade"]:
+        occurrences[answer] = occurrences.get(answer, 0) + 1
+
+    return occurrences
+
+
+def plot_age_students(answers:dict):
+    """
+        Cria um gráfico em barras mostrando as idades
+        dos estudantes entrevistados e suas respectivas
+        frequências
+    """
+    print("answers.keys()", answers.keys())
+    plt.style.use('_mpl-gallery')
+    x = [str(value)+" anos" for value in answers.keys()]
+    y = [value for value in answers.values()]
+    # plot
+    fig, ax = plt.subplots()
+    ax.bar(x, y, width=1, edgecolor="white", linewidth=1, color="tab:blue")
+    ax.set_ylabel("quantidade de ocorrências/respostas")
+    ax.set_title("distribuição das idades de acordo com as respostas dos estudantes")
+    ax.set(xlim=(0, len(answers)), xticks=[value for value in answers.keys()],
+        ylim=(0, 20), yticks=np.arange(1, 20))
+    plt.subplots_adjust(left=0.04, bottom=0.04, right=0.94, top=0.94)
+    plt.show()        
+
 
 def number_of_male_female():
     """
@@ -74,21 +97,6 @@ def plot_females_males(dist_males_females:dict):
     plt.subplots_adjust(left=0.04, bottom=0.04, right=0.94, top=0.94)
     plt.show()
 
-# def plot_pie(legend:list, data:dict):
-#     print(legend[0], legend[1])
-#     print(type(legend[0]))
-#     data = [data.get(legend[0]), data.get(legend[1])]
-#     print(data)
-#     colors = plt.get_cmap('Blues')(np.linspace(0.2, 0.7, len(data)))
-#     fig, ax = plt.subplots()
-#     ax.pie(data, colors=colors, radius=3, center=(4,4), wedgeprops={"linewidth": 1, "edgecolor": "white"}, frame=True)
-#     ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
-#            ylim=(0, 8), yticks=np.arange(1, 8))
-#     men_patch = mpatches.Patch(color='#d0e1f2', label=legend[0])
-#     women_patch = mpatches.Patch(color='#2e7ebc', label=legend[1])
-#     ax.legend(handles=[women_patch, men_patch])
-#     plt.show()
-
 
 def do_you_work():
     """
@@ -109,6 +117,7 @@ def do_you_work():
             "working": working, 
             "not_working": not_working
         }
+
 
 def plot_working_not_working(dist_working_not_working:dict):
     """
@@ -186,12 +195,16 @@ def plot_habitation(answer_habitation:dict):
 
 
 def filter_study_hours() -> list:
+    """
+        Retira "horas" da string e converte para inteiro
+    """
     real_answers = []
     for answer in file["Tempo de estudo diário horas"]:
         # print(type(answer))
         filtered_answer = str(answer).split("horas")[0]
         real_answers.append(int(filtered_answer))
     return real_answers
+
 
 def get_avg_study_hours(answers_in_hours:list) -> float:
     sum = 0
@@ -202,7 +215,13 @@ def get_avg_study_hours(answers_in_hours:list) -> float:
     
     return sum/len(answers_in_hours)
 
+
 def plot_avg_study_hours(avg_stdy_hours:float):
+    """
+        Desenha gráfico de barras mostrando as 
+        horas de estudo que os entrevistados responderam
+        e suas respectivas frequências
+    """
     plt.style.use('_mpl-gallery')
     x = 0.5 + np.arange(1)
     y = [avg_stdy_hours]
@@ -217,8 +236,10 @@ def plot_avg_study_hours(avg_stdy_hours:float):
     plt.subplots_adjust(left=0.04, bottom=0.04, right=0.94, top=0.94)
     plt.show()
 
+
 def plot_trend_study_hours():
     pass
+
 
 def get_study_hours_frequencies(answers_in_hours:list):
     occurrences = {}
@@ -247,16 +268,17 @@ def get_trend_study_hours(occurrences:dict):
 def plot_stdy_hours_frequencies(occurrences:dict):
     plt.style.use('_mpl-gallery')
     print('len(occurrences)', len(occurrences))
-    x = [str(value)+"hora(s)" for value in occurrences.keys()]
+    print(sorted(occurrences.keys()))
+    x = [str(value)+"hora(s)" for value in sorted(occurrences.keys())]
     y = [value for value in occurrences.values()]
     # plot
+    x = x.sort()
     fig, ax = plt.subplots()
     ax.bar(x, y, width=0.5, edgecolor="white", linewidth=1, color="tab:blue")
     ax.set_ylabel("quantidade de ocorrências/respostas")
     ax.set_title("distribuição das horas de estudo de acordo com as respostas dos estudantes")
     ax.set(xlim=(0, len(occurrences)), xticks=[value for value in occurrences.keys()],
         ylim=(0, 20), yticks=np.arange(1, 20))
-    # ax.legend(title="legenda")
     plt.subplots_adjust(left=0.04, bottom=0.04, right=0.94, top=0.94)
     plt.show()
     
@@ -300,7 +322,7 @@ def plot_most_used_device(devices_result:dict):
     plt.style.use("_mpl-gallery-nogrid")
     computer   = devices_result.get("computer_counter")
     smartphone = devices_result.get("smartphone_counter")
-    tablet = devices_result.get("tablet_counter")
+    tablet     = devices_result.get("tablet_counter")
 
     data = [computer, smartphone, tablet]
     colors = plt.get_cmap('Blues')(np.linspace(0.2, 0.7, len(data)))
@@ -313,9 +335,11 @@ def plot_most_used_device(devices_result:dict):
     ax.pie(data, colors=colors, radius=3, center=(4,4), wedgeprops={"linewidth": 1, "edgecolor": "white"}, autopct=absolute_value ,frame=True)
     ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
            ylim=(0, 8), yticks=np.arange(1, 8))
-    computer_patch = mpatches.Patch(color='#d0e1f2', label="Vespertino")
-    smartphone_patch = mpatches.Patch(color='#2e7ebc', label="Noturno")
-    ax.legend(handles=[computer_patch, smartphone_patch])
+    ax.set_title("distribuição dos dispositivos usados pelos estudantes entrevistados")
+    computer_patch = mpatches.Patch(color='#d0e1f2', label="Computador")
+    smartphone_patch = mpatches.Patch(color='#7fb9da', label="Smartphone")
+    tablet_patch = mpatches.Patch(color='#2e7ebc', label="Tablet")
+    ax.legend(handles=[computer_patch, smartphone_patch, tablet_patch])
     plt.subplots_adjust(left=0.04, bottom=0.04, right=0.94, top=0.94)
     plt.show()
 
@@ -435,41 +459,49 @@ if __name__ == "__main__":
 
 
 ########################################################################################################################
+    # cria grafico com as idades dos entrevistados
+    ages = get_age_students()
+    plot_age_students(ages)
+
+
+########################################################################################################################
+    # cria grafico mostrando os dispositivos mais usados (tablet/ smartphone/ computador)
     devices_answers = get_most_used_device()
     plot_most_used_device(devices_answers)
 
+
 ########################################################################################################################
     # cria grafico das resposta a pergunta turno (vespertino/noturno)
-    # student_periods = get_period()
-    # plot_student_period(student_periods)
+    student_periods = get_period()
+    plot_student_period(student_periods)
 
 
 ########################################################################################################################    
-    # cria grafico das respostas a pergunta (quantas horas de estudo?)
-    # stdy_hrs = filter_study_hours()
-    # stdy_hours_frequencies = get_study_hours_frequencies(stdy_hrs)
-    # print(stdy_hours_frequencies)
-    # plot_stdy_hours_frequencies(stdy_hours_frequencies)
-    # print("trend value in stdy hours:", get_trend_study_hours(stdy_hours_frequencies))
+    # cria grafico das respostas a pergunta "quantas horas de estudo?"
+    stdy_hrs = filter_study_hours()
+    stdy_hours_frequencies = get_study_hours_frequencies(stdy_hrs)
+    print(stdy_hours_frequencies)
+    plot_stdy_hours_frequencies(stdy_hours_frequencies)
+    print("trend value in stdy hours:", get_trend_study_hours(stdy_hours_frequencies))
 
 
 ########################################################################################################################
     # cria grafico das respostas a pergunta trabalha? (sim/ nao)    
-    # dist_working_not_working = do_you_work()
-    # plot_working_not_working(dist_working_not_working)
+    dist_working_not_working = do_you_work()
+    plot_working_not_working(dist_working_not_working)
 
 
 ########################################################################################################################
     # cria grafico da distribuicao do tipo de habitacao (sozinho, familia, amigos)
-    # habitation = who_do_you_live_with()
-    # plot_habitation(habitation)
+    habitation = who_do_you_live_with()
+    plot_habitation(habitation)
 
 
 ########################################################################################################################
     # cria grafico de tempo medio de estudo
-    # filtered_answers_study_hours = filter_study_hours()
-    # avg_study_hours = get_avg_study_hours(filtered_answers_study_hours)
-    # plot_avg_study_hours(avg_study_hours)
+    filtered_answers_study_hours = filter_study_hours()
+    avg_study_hours = get_avg_study_hours(filtered_answers_study_hours)
+    plot_avg_study_hours(avg_study_hours)
 
 
     # do_you_work()
