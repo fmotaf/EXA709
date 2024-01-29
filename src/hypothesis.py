@@ -5,14 +5,21 @@ import analysis.study_hours as study_hours
 import analysis.habitation as habitation
 import utils.dataset as dataset
 import utils.filters as filters
-
+import utils.plot as plot
 
 # HIPOTESES:
 # 1: A maioria dos estudantes que trabalha estuda pela noite?
 def confirm_hpt_1() -> dict:
+    """
+    Variavel independente: Se o estudante trabalha (Sim/Não)
+    Variavel dependente: Periodo de estudo (Vespertino/Noturno)
+    """
+
     period = dataset.file["Período"]
     work = dataset.file["Você trabalha?"]
-
+    
+    total_students = len(work)
+    
     # hpt1_true = false
     trabalha_e_noturno = 0
     trabalha_e_vespertino = 0
@@ -33,13 +40,13 @@ def confirm_hpt_1() -> dict:
                 nao_trabalha_e_vespertino += 1
 
     print(
-        "qtd. de estudantes que trabalham e estudam DE NOITE/DE DIA",
+        "qtd. de estudantes que trabalham e estudam DE NOITE/ DE DIA",
         trabalha_e_noturno,
         "/",
         trabalha_e_vespertino,
     )
     print(
-        "qtd. de estudantes que NAO trabalham e estudam DE NOITE/DE DIA",
+        "qtd. de estudantes que NAO trabalham e estudam DE NOITE/ DE DIA",
         nao_trabalha_e_noturno,
         "/",
         nao_trabalha_e_vespertino,
@@ -53,12 +60,8 @@ def confirm_hpt_1() -> dict:
     }
 
 
-def plot_hpt_1(hpt_1_results: dict):
-    """
-    Variavel independente: Se o estudante trabalha (Sim/Não)
-    Variavel dependente: Periodo de estudo (Vespertino/Noturno)
-    """
-    pass
+# def plot_hpt_1(data = hpt_1_results: dict):
+#     pass
 
 
 # HIPOTESE 2:
@@ -74,6 +77,7 @@ def confirm_hpt_2(dispositivos_mais_usados: dict):
 
 
 if __name__ == "__main__":
+    """
     work.do_you_work()
     habitation.who_do_you_live_with()
     answers_filtered = filters.study_hours(dataset.file)
@@ -86,3 +90,16 @@ if __name__ == "__main__":
     confirm_hpt_1()
     dispositivo_mais_usado = most_used_device.get_most_used_device()
     confirm_hpt_2(dispositivo_mais_usado)
+    """
+    hpt1 = confirm_hpt_1()
+    plot.pie(
+        title="A maioria dos estudantes que trabalha estuda de noite?", 
+        data = hpt1, 
+        legend= {
+            "work_stdy_vespertine": "trabalha e estuda de noite", 
+            "work_stdy_night": "trabalha e estuda de dia", 
+            "dont_work_stdy_vespertine": "nao trabalha e estuda de noite", 
+            "dont_work_stdy_night": "nao trabalha e estuda de dia"
+        }, 
+        color_type=plot.COLOR_TYPE_RAINBOW
+    )

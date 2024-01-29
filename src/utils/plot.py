@@ -75,15 +75,19 @@ def pie(
     def absolute_value(value):
         sizes = np.array([item for item in data.values()])
         return np.round(value / 100.0 * sizes.sum(), 0)
-
     fig, ax = plt.subplots()
+
+    def func(pct, allvals):
+        absolute = int(np.round(pct/100.*np.sum(allvals)))
+        return f"{pct:.1f}%\n({absolute:d})"
+
     ax.pie(
         x=new_data,
         colors=colors,
         radius=3,
         center=(4, 4),
         wedgeprops={"linewidth": 1, "edgecolor": "white"},
-        autopct=absolute_value,
+        autopct=lambda pct: func(pct, new_data),
         frame=True,
     )
 
@@ -103,6 +107,7 @@ def pie(
         ylim=(0, len(new_data) + 1),
         yticks=np.arange(1, len(new_data) + 1),
     ) """
+
 
     ax.legend(handles=handlers, title=legend_title)
 
@@ -126,6 +131,7 @@ def bar(
     y_label=None,
     color_type=COLOR_TYPE_BLUE,
 ):
+    plt.style.use('_mpl-gallery')
     (new_data, handlers, colors, max_value) = chart_header(data, legend, color_type)
 
     if type(x_label_item) == str:
@@ -154,8 +160,8 @@ def bar(
     ax.set(
         xlim=(0, 1),
         xticks=np.arange(1, len(new_data) + 1),
-        ylim=(0, max_value + 2),
-        yticks=np.arange(1, max_value + 2),
+        ylim=(0, max_value + 1),
+        yticks=np.arange(0.1, max_value + 2),
     )
 
     if legend:
