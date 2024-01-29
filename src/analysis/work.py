@@ -5,6 +5,7 @@ import matplotlib.patches as mpatches
 import numpy as np
 import utils.dataset as dataset
 import utils.filters as filters
+import utils.plot as plot
 
 
 def do_you_work():
@@ -13,39 +14,19 @@ def do_you_work():
     )
 
 
-def plot_working_not_working(dist_working_not_working: dict):
-    """
-    Desenha grafico de barros mostrando a distribuicao dos
-    estudantes da uefs respondendo a pergunta Trabalha? (sim/ não)
-    """
-    # plt.style.use('_mpl-gallery')
-    number_working = dist_working_not_working.get("working")
-    number_not_working = dist_working_not_working.get("not_working")
-    x = 0.5 + np.arange(2)
-    y = [number_working, number_not_working]
-    # plot
-    fig, ax = plt.subplots()
-    bar_labels = ["trabalham", "não trabalham"]
-    bar_colors = ["tab:blue", "tab:red"]
-    ax.bar(
-        x,
-        y,
-        width=0.5,
-        edgecolor="white",
-        linewidth=1,
-        label=bar_labels,
-        color=bar_colors,
-    )
-    ax.set_title("distribuição considerando os alunos que trabalham e não trabalham")
-    ax.set(xlim=(0, 3), xticks=np.arange(1, 10), ylim=(0, 40), yticks=np.arange(1, 40))
-    ax.legend(title="distribuicao entre alunos que trabalham/não trabalham")
-    plt.subplots_adjust(left=0.04, bottom=0.04, right=0.94, top=0.94)
-    plt.show()
-
-
 def run():
     dist_working_not_working = do_you_work()
-    plot_working_not_working(dist_working_not_working)
+
+    plot.bar(
+        title="Distribuição considerando os alunos que trabalham e não trabalham",
+        legend={
+            "working": "Trabalham",
+            "not_working": "Não trabalham",
+        },
+        data=dist_working_not_working,
+        legend_title="Distribuicao entre alunos que trabalham/não trabalham",
+        color_type=plot.COLOR_TYPE_RAINBOW,
+    )
 
 
 if __name__ == "__main__":
