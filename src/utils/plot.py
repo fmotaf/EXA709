@@ -36,30 +36,135 @@ COLOR_TYPE_BUGN = "BuGn"
 COLOR_TYPE_RAINBOW = "rainbow"
 
 
-def pie(legend: list, data: dict, color_type=COLOR_TYPE_BLUE):
-    legends_keys = list(legend.keys())
+def chart_header(data, legend, color_type):
+    data = data.copy()
+    max_value = max(list(data.values()))
 
-    colors = plt.get_cmap(color_type)(np.linspace(0.2, 0.8, len(data)))
+    if legend != None:
+        legends_keys = list(legend.keys())
+
+    colors = plt.get_cmap(color_type)(np.linspace(0.2, 0.8, len(data.keys())))
 
     new_data = []
     handlers = []
-    for index in range(len(legends_keys)):
-        legend_key = legends_keys[index]
-        label = legend[legend_key]
-        handlers.append(mpatches.Patch(color=colors[index], label=label))
-        new_data.append(data.get(legend_key))
+    for index in range(len(data.keys())):
+        if legend != None:
+            legend_key = legends_keys[index]
+            label = legend[legend_key]
+            new_data.append(data.get(legend_key))
+            handlers.append(mpatches.Patch(color=colors[index], label=label))
+        else:
+            new_data.append(data.popitem())
+            handlers.append(mpatches.Patch(color=colors[index]))
+
+    return (new_data, handlers, colors, max_value)
+
+
+def pie(
+    title: str,
+    data: dict,
+    legend=None,
+    legend_title=None,
+    y_label=None,
+    x_label=None,
+    color_type=COLOR_TYPE_BLUE,
+):
+    (new_data, handlers, colors, _) = chart_header(data, legend, color_type)
+
+
+    def absolute_value(value):
+        sizes = np.array([item for item in data.values()])
+        return np.round(value / 100.0 * sizes.sum(), 0)
 
     fig, ax = plt.subplots()
     ax.pie(
-        new_data,
+        x=new_data,
         colors=colors,
         radius=3,
         center=(4, 4),
         wedgeprops={"linewidth": 1, "edgecolor": "white"},
+        autopct=absolute_value,
         frame=True,
     )
 
-    ax.set(xlim=(0, 8), xticks=np.arange(1, 8), ylim=(0, 8), yticks=np.arange(1, 8))
-    ax.legend(handles=handlers)
+    ax.set_title(title)
 
+    if y_label:
+        ax.set_ylabel(y_label)
+
+    if x_label:
+        ax.set_xlabel(x_label)
+
+    ax.set(xlim=(0, 8), xticks=np.arange(1, 8), ylim=(0, 8), yticks=np.arange(1, 8))
+
+    """ ax.set(
+        xlim=(0, 1),
+        xticks=np.arange(1, len(new_data) + 2),
+        ylim=(0, len(new_data) + 1),
+        yticks=np.arange(1, len(new_data) + 1),
+    ) """
+
+    ax.legend(handles=handlers, title=legend_title)
+
+    plt.subplots_adjust(
+        left=0.1 if y_label else 0.08,
+        bottom=0.12 if x_label else 0.06,
+        right=0.94,
+        top=0.94,
+    )
+
+    plt.show()
+
+
+def bar(
+    title: str,
+    data: dict,
+    legend: list = None,
+    legend_title=None,
+    x_label=None,
+    x_label_item=None,
+    y_label=None,
+    color_type=COLOR_TYPE_BLUE,
+):
+    (new_data, handlers, colors, max_value) = chart_header(data, legend, color_type)
+
+    if type(x_label_item) == str:
+        x_label_item = ["%d%s" % (i, x_label_item) for i in range(len(new_data))]
+
+    x = x_label_item if x_label_item else 0.5 + np.arange(len(new_data))
+    y = data.values()
+
+    fig, ax = plt.subplots()
+    ax.bar(
+        x,
+        y,
+        width=0.7,
+        edgecolor="white",
+        linewidth=1,
+        color=colors,
+    )
+    ax.set_title(title)
+
+    if y_label:
+        ax.set_ylabel(y_label)
+
+    if x_label:
+        ax.set_xlabel(x_label)
+
+    ax.set(
+        xlim=(0, 1),
+        xticks=np.arange(1, len(new_data) + 1),
+        ylim=(0, max_value + 2),
+        yticks=np.arange(1, max_value + 2),
+    )
+
+    if legend:
+        ax.legend(handles=handlers, title=legend_title)
+
+    plt.subplots_adjust(
+        left=0.1 if y_label else 0.08,
+        bottom=0.12 if x_label else 0.06,
+        right=0.94,
+        top=0.94,
+    )
     plt.show()
