@@ -1,5 +1,6 @@
 import _fix_import
-
+import matplotlib.pyplot as plt
+import numpy as np
 import utils.dataset as dataset
 import utils.filters as filters
 import utils.plot as plot
@@ -23,7 +24,11 @@ def what_your_family_imcome():
 
 def run():
     family_income = what_your_family_imcome()
-    plot.pie(
+
+    plot.bar(
+        title="Renda familiar",
+        legend_title="Distribuição entre a renda familiar dos estudantes",
+        data=family_income,
         legend={
             "less_than_1": "Menos de um salário mínimo",
             "between_1_2": "Entre 1 e 2 salários mínimos",
@@ -33,7 +38,6 @@ def run():
             "between_5_6": "Entre 5 e 6 salários mínimos",
             "more_then_6": "Mais de 6 salários mínimos",
         },
-        data=family_income,
         color_type=plot.COLOR_TYPE_RAINBOW,
     )
 

@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import utils.dataset as dataset
 import utils.filters as filters
+import utils.plot as plot
 
 
 def get_study_hours_frequencies(answers_in_hours: list):
@@ -56,9 +57,20 @@ def plot_stdy_hours_frequencies(occurrences: dict):
 def run():
     stdy_hrs = filters.study_hours(dataset.file)
     stdy_hours_frequencies = get_study_hours_frequencies(stdy_hrs)
+    # stdy_hours_frequencies = dict(sorted(stdy_hours_frequencies.items()))
     print(stdy_hours_frequencies)
-    plot_stdy_hours_frequencies(stdy_hours_frequencies)
-    print("trend value in stdy hours:", get_trend_study_hours(stdy_hours_frequencies))
+    # plot_stdy_hours_frequencies(stdy_hours_frequencies)
+
+    plot.bar(
+        title="Numero medio de estudo em horas",
+        data=stdy_hours_frequencies,
+        legend_title="Valor médio do tempo dedicado aos estudos pelos participantes",
+        color_type=plot.COLOR_TYPE_RAINBOW,
+        y_label="Quantidade de ocorrências/respostas",
+        x_label_item=["%d hr(s)" % item for item in list(stdy_hours_frequencies.keys())],
+    )
+
+    # print("trend value in stdy hours:", get_trend_study_hours(stdy_hours_frequencies))
 
 
 if __name__ == "__main__":
