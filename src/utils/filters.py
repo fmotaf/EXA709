@@ -14,3 +14,11 @@ def answers(file, column, map_key=None):
         key = map_key[row] if map_key != None and row in map_key else row
         result[key] = 1 if key not in result.keys() else result[key] + 1
     return result
+
+
+def frequencies(file, column):
+    answers = file[column]
+    occurrences = {}
+    for answer in answers:
+        occurrences["%s -> %s" % (column, answer)] = occurrences.get(answer, 0) + 1
+    return occurrences
