@@ -26,7 +26,7 @@ def run():
     habitation = who_do_you_live_with()
 
     plot.pie(
-        title="Habitação",
+        title="Mora com quem?",
         legend={"parents": "Pais", "solo": "Só", "friends": "Amigos"},
         data=habitation,
     )

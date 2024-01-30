@@ -7,9 +7,9 @@ import utils.dataset as dataset
 import utils.filters as filters
 import utils.plot as plot
 
-# HIPOTESES:
+# PERGUNTAS:
 # 1: A maioria dos estudantes que trabalha estuda pela noite?
-def confirm_hpt_1() -> dict:
+def question1() -> dict:
     """
     Variavel independente: Se o estudante trabalha (Sim/Não)
     Variavel dependente: Periodo de estudo (Vespertino/Noturno)
@@ -55,8 +55,8 @@ def confirm_hpt_1() -> dict:
     return {
         "work_stdy_vespertine": trabalha_e_vespertino,
         "work_stdy_night": trabalha_e_noturno,
-        "dont_work_stdy_vespertine": nao_trabalha_e_vespertino,
-        "dont_work_stdy_night": nao_trabalha_e_noturno,
+        # "dont_work_stdy_vespertine": nao_trabalha_e_vespertino,
+        # "dont_work_stdy_night": nao_trabalha_e_noturno,
     }
 
 
@@ -64,10 +64,11 @@ def confirm_hpt_1() -> dict:
 #     pass
 
 
-# HIPOTESE 2:
-# O NUMERO DE ESTUDANTES QUE USAM INTERNET ATRAVES DE DISPOSITIVOS MOVEIS EH MAIOR QUE OS QUE USAM VIA DESKTOP/ PC DE MESA
-def confirm_hpt_2(dispositivos_mais_usados: dict):
+# PERGUNTA 2:
+# O NUMERO DE ESTUDANTES QUE USAM INTERNET ATRAVES DE DISPOSITIVOS MOVEIS É MAIOR QUE OS QUE USAM VIA DESKTOP/ PC DE MESA
+def question2(dispositivos_mais_usados: dict):
     valor_mais_usado = max(dispositivos_mais_usados, key=dispositivos_mais_usados.get)
+    print(valor_mais_usado)
     return valor_mais_usado
 
     # print("valor_mais_usado")
@@ -91,15 +92,17 @@ if __name__ == "__main__":
     dispositivo_mais_usado = most_used_device.get_most_used_device()
     confirm_hpt_2(dispositivo_mais_usado)
     """
-    hpt1 = confirm_hpt_1()
+    q1 = question1()
     plot.pie(
         title="A maioria dos estudantes que trabalha estuda de noite?", 
-        data = hpt1, 
+        data = q1, 
         legend= {
-            "work_stdy_vespertine": "trabalha e estuda de noite", 
-            "work_stdy_night": "trabalha e estuda de dia", 
-            "dont_work_stdy_vespertine": "nao trabalha e estuda de noite", 
-            "dont_work_stdy_night": "nao trabalha e estuda de dia"
+            "work_stdy_vespertine": "trabalha e estuda de dia", 
+            "work_stdy_night": "trabalha e estuda de noite", 
+            # "dont_work_stdy_vespertine": "nao trabalha e estuda de dia", 
+            # "dont_work_stdy_night": "nao trabalha e estuda de noite"
         }, 
         color_type=plot.COLOR_TYPE_RAINBOW
     )
+
+    q2 = question2()

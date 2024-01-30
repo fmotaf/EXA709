@@ -71,10 +71,6 @@ def pie(
 ):
     (new_data, handlers, colors, _) = chart_header(data, legend, color_type)
 
-
-    def absolute_value(value):
-        sizes = np.array([item for item in data.values()])
-        return np.round(value / 100.0 * sizes.sum(), 0)
     fig, ax = plt.subplots()
 
     def func(pct, allvals):
@@ -109,7 +105,7 @@ def pie(
     ) """
 
 
-    ax.legend(handles=handlers, title=legend_title)
+    ax.legend(handles=handlers, title=legend_title, fontsize=20)
 
     plt.subplots_adjust(
         left=0.1 if y_label else 0.08,
@@ -124,15 +120,24 @@ def pie(
 def bar(
     title: str,
     data: dict,
+    use_grid: bool = False,
     legend: list = None,
     legend_title=None,
     x_label=None,
     x_label_item=None,
     y_label=None,
+    xlim=None,
+    ylim=None,
+    xticks=None,
+    yticks= None,
     color_type=COLOR_TYPE_BLUE,
 ):
-    plt.style.use('_mpl-gallery')
     (new_data, handlers, colors, max_value) = chart_header(data, legend, color_type)
+    
+    if use_grid:
+        plt.style.use('_mpl-gallery')
+    else:
+        plt.style.use('_mpl-gallery-no-grid')
 
     if type(x_label_item) == str:
         x_label_item = ["%d%s" % (i, x_label_item) for i in range(len(new_data))]
@@ -158,10 +163,10 @@ def bar(
         ax.set_xlabel(x_label)
 
     ax.set(
-        xlim=(0, 1),
-        xticks=np.arange(1, len(new_data) + 1),
-        ylim=(0, max_value + 1),
-        yticks=np.arange(0.1, max_value + 2),
+        xlim=xlim if xlim else (0, 1),
+        xticks=xticks if xticks else np.arange(1, len(new_data) + 1),
+        ylim=ylim if ylim else (0, max_value + 2),
+        yticks=yticks if yticks else np.arange(1, max_value + 2),
     )
 
     if legend:

@@ -22,7 +22,7 @@ def get_period() -> dict:
 def run():
     student_periods = get_period()
     plot.pie(
-        title="Dispositivos mais usados",
+        title="Período",
         legend={
             "students_verspetine_counter": "Vespertino",
             "students_night_counter": "Noturno",

@@ -17,8 +17,8 @@ def number_of_male_female():
 def run():
     male_female = number_of_male_female()
     plot.pie(
-        title="Homes e Mulheres",
-        legend={"males": "Homens", "females": "Mulheres"},
+        title="Gênero das pessoas que responderam",
+        legend={"males": "Masculino", "females": "Feminino"},
         data=male_female,
     )
 

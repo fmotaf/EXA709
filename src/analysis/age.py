@@ -66,4 +66,9 @@ def run():
     )
 
 if __name__ == "__main__":
+    ages = set()
+    for row in dataset.file["Idade"]:
+        ages.add(row)
+    avg_age()
+    print(ages)
     run()

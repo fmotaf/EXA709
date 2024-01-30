@@ -10,7 +10,7 @@ import utils.plot as plot
 
 def do_you_work():
     return filters.answers(
-        dataset.file, "Você trabalha?", {"Não": "not_working", "Sim": "working"}
+        dataset.file, "Você trabalha?", {"Sim": "working", "Não": "not_working"}
     )
 
 
@@ -19,9 +19,10 @@ def run():
 
     plot.bar(
         title="Distribuição considerando os alunos que trabalham e não trabalham",
+        use_grid=True,
         legend={
-            "working": "Trabalham",
             "not_working": "Não trabalham",
+            "working": "Trabalham",
         },
         data=dist_working_not_working,
         legend_title="Distribuicao entre alunos que trabalham/não trabalham",

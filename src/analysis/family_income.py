@@ -38,6 +38,7 @@ def run():
             "between_5_6": "Entre 5 e 6 salários mínimos",
             "more_then_6": "Mais de 6 salários mínimos",
         },
+        use_grid=True,
         color_type=plot.COLOR_TYPE_RAINBOW,
     )
 
