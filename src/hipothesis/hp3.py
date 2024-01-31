@@ -10,7 +10,7 @@ from natsort import natsorted
 if __name__ == "__main__":
     check = []
     for i in range(1, 13, 1):
-        for yes_no in ["Sim"]:
+        for yes_no in ["Não"]:
             check.append((yes_no, str(i)))
     check = tuple(check)
 
@@ -22,12 +22,13 @@ if __name__ == "__main__":
 
     legend = {}
     for key in result["and"].keys():
-        hrs = int(key.replace("Sim && ", ""))
+        hrs = int(key.replace("Não && ", ""))
         legend[key] = "%s hora(s)" % (hrs)
+
     legend = dict(natsorted(legend.items()))
 
     plot.bar(
-        title="Quantidade de horas de estudo dos estudantes que trabalham",
+        title="Quantidade de horas de estudo dos estudantes que não trabalham",
         data=result["probability_and"],
         raw_data=result["and"],
         total_data=62,

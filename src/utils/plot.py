@@ -53,9 +53,9 @@ def chart_header(data, raw_data, legend, color_type):
         if legend != None:
             legend_key = legends_keys[index]
             label = legend[legend_key]
-            new_data.append(data.get(legend_key))
+            new_data.append(data.get(legend_key, 0))
             if raw_data:
-                new_raw_data.append(raw_data.get(legend_key))
+                new_raw_data.append(raw_data.get(legend_key, 0))
             handlers.append(mpatches.Patch(color=colors[index], label=label))
         else:
             new_data.append(data.popitem()[1])
@@ -68,9 +68,12 @@ def chart_header(data, raw_data, legend, color_type):
     return (new_data, new_raw_data, handlers, colors, max_value)
 
 
-def make_autopct(values):
+def make_autopct(values, total_data=None):
     def my_autopct(pct):
-        total = sum(values)
+        if total_data:
+            total = total_data
+        else:
+            total = sum(values)
         val = int(round(pct * total / 100.0))
         return "{p:.2f}%  ({v:d})".format(p=pct, v=val)
 
@@ -81,6 +84,7 @@ def pie(
     title: str,
     data: dict,
     raw_data=None,
+    total_data=None,
     legend=None,
     legend_title=None,
     y_label=None,
@@ -98,7 +102,7 @@ def pie(
         radius=3,
         center=(4, 4),
         wedgeprops={"linewidth": 1, "edgecolor": "white"},
-        autopct=make_autopct(new_raw_data) if raw_data else "%.1f",
+        autopct=make_autopct(new_raw_data, total_data) if raw_data else "%.1f",
         frame=True,
     )
 
@@ -135,6 +139,7 @@ def bar(
     title: str,
     data: dict,
     raw_data=None,
+    total_data=None,
     legend: list = None,
     legend_title=None,
     x_label=None,
@@ -152,14 +157,6 @@ def bar(
     x = x_label_item if x_label_item else 0.5 + np.arange(len(new_data))
     y = new_data
 
-    def make_autopct(values):
-        def my_autopct(pct):
-            total = sum(values)
-            val = int(round(pct * total / 100.0))
-            return "{p:.2f}%  ({v:d})".format(p=pct, v=val)
-
-        return my_autopct
-
     fig, ax = plt.subplots()
     bar_container = ax.bar(
         x,
@@ -171,7 +168,7 @@ def bar(
     )
 
     if raw_data:
-        ax.bar_label(bar_container, fmt=make_autopct(new_raw_data))
+        ax.bar_label(bar_container, fmt=make_autopct(new_raw_data, total_data))
     else:
         ax.bar_label(bar_container, fmt="{:,.1f}")
 

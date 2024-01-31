@@ -9,12 +9,6 @@ import utils.plot as plot
 import utils.prob as prob
 
 
-def do_you_work():
-    return filters.answers(
-        dataset.file, "Você trabalha?", {"Não": "not_working", "Sim": "working"}
-    )
-
-
 def run():
     result = prob.sum_(dataset.file, ("Você trabalha?",))
     print(

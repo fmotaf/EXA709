@@ -15,7 +15,7 @@ def sum_(dataset: any, keys: tuple, check: tuple = None):
                 key_prob = " && ".join(item_check)
                 add = True
                 for i, c in enumerate(item_check):
-                    if item[i] != c:
+                    if str(item[i]).lower() != str(c).lower():
                         add = False
                 if add:
                     if key_prob not in prob_and:

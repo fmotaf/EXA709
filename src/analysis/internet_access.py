@@ -10,17 +10,15 @@ import utils.prob as prob
 
 
 def run():
-    result = prob.sum_(dataset.file, ("Mora com quem?",))
-    print(result)
+    result = prob.sum_(dataset.file, ("Você costuma acessar a internet?",))
     plot.pie(
-        title="Mora com quem?",
-        legend={
-            "Mora com quem? -> Pais": "Pais",
-            "Mora com quem? -> Só": "Só",
-            "Mora com quem? -> Amigos": "Amigos",
-        },
+        title="Estudantes que acessam internet",
         data=result["probability_raw"],
         raw_data=result["raw"],
+        legend={
+            "Você costuma acessar a internet? -> Sim": "Sim",
+            "Você costuma acessar a internet? -> Não": "Não",
+        },
         color_type=plot.COLOR_TYPE_RAINBOW,
     )
 
