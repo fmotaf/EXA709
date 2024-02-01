@@ -5,6 +5,7 @@ import analysis.study as study
 import analysis.males_females as males_females
 import analysis.study_hours as study_hours
 import analysis.habitation as habitation
+import analysis.family_income as family_income
 
 # plt.subplots_adjust(left=0.04, bottom=0.04, right=0.94, top=0.94) ??
 
@@ -16,3 +17,4 @@ if __name__ == "__main__":
     males_females.run()
     study_hours.run()
     habitation.run()
+    family_income.run()

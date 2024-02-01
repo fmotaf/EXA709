@@ -6,20 +6,17 @@ import numpy as np
 import utils.dataset as dataset
 import utils.plot as plot
 import utils.filters as filters
-
-
-def number_of_male_female():
-    return filters.answers(
-        dataset.file, "Gênero", {"Masculino": "males", "Feminino": "females"}
-    )
+import utils.prob as prob
 
 
 def run():
-    male_female = number_of_male_female()
+    result = prob.sum_(dataset.file, ("Gênero",))
     plot.pie(
-        title="Homes e Mulheres",
-        legend={"males": "Homens", "females": "Mulheres"},
-        data=male_female,
+        title="Gênero",
+        legend={"Gênero -> Masculino": "Homens", "Gênero -> Feminino": "Mulheres"},
+        data=result["probability_raw"],
+        raw_data=result["raw"],
+        color_type=plot.COLOR_TYPE_RAINBOW,
     )
 
 

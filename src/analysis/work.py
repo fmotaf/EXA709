@@ -6,25 +6,31 @@ import numpy as np
 import utils.dataset as dataset
 import utils.filters as filters
 import utils.plot as plot
-
-
-def do_you_work():
-    return filters.answers(
-        dataset.file, "Você trabalha?", {"Não": "not_working", "Sim": "working"}
-    )
+import utils.prob as prob
 
 
 def run():
-    dist_working_not_working = do_you_work()
-
+    result = prob.sum_(dataset.file, ("Você trabalha?",))
+    print(
+        "SIM: ",
+        (
+            dataset.file["Você trabalha?"][dataset.file["Você trabalha?"] == "Sim"]
+        ).count(),
+    )
+    print(
+        "Não",
+        (
+            dataset.file["Você trabalha?"][dataset.file["Você trabalha?"] == "Não"]
+        ).count(),
+    )
     plot.bar(
-        title="Distribuição considerando os alunos que trabalham e não trabalham",
+        title="Estudantes que trabalham",
+        data=result["probability_raw"],
+        raw_data=result["raw"],
         legend={
-            "working": "Trabalham",
-            "not_working": "Não trabalham",
+            "Você trabalha? -> Sim": "Sim",
+            "Você trabalha? -> Não": "Não",
         },
-        data=dist_working_not_working,
-        legend_title="Distribuicao entre alunos que trabalham/não trabalham",
         color_type=plot.COLOR_TYPE_RAINBOW,
     )
 

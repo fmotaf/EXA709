@@ -6,29 +6,22 @@ import numpy as np
 import utils.dataset as dataset
 import utils.filters as filters
 import utils.plot as plot
-
-
-def who_do_you_live_with():
-    return filters.answers(
-        dataset.file,
-        "Mora com quem?",
-        {
-            "Família": "parents",
-            "Pais": "parents",
-            "Só": "solo",
-            "Sozinho": "solo",
-            "Amigos": "friends",
-        },
-    )
+import utils.prob as prob
 
 
 def run():
-    habitation = who_do_you_live_with()
-
+    result = prob.sum_(dataset.file, ("Mora com quem?",))
+    print(result)
     plot.pie(
-        title="Habitação",
-        legend={"parents": "Pais", "solo": "Só", "friends": "Amigos"},
-        data=habitation,
+        title="Mora com quem?",
+        legend={
+            "Mora com quem? -> Pais": "Pais",
+            "Mora com quem? -> Só": "Só",
+            "Mora com quem? -> Amigos": "Amigos",
+        },
+        data=result["probability_raw"],
+        raw_data=result["raw"],
+        color_type=plot.COLOR_TYPE_RAINBOW,
     )
 
 

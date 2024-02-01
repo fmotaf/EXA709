@@ -36,9 +36,10 @@ COLOR_TYPE_BUGN = "BuGn"
 COLOR_TYPE_RAINBOW = "rainbow"
 
 
-def chart_header(data, legend, color_type):
+def chart_header(data, raw_data, legend, color_type):
     data = data.copy()
-    max_value = max(list(data.values()))
+    if raw_data:
+        raw_data = raw_data.copy()
 
     if legend != None:
         legends_keys = list(legend.keys())
@@ -46,35 +47,53 @@ def chart_header(data, legend, color_type):
     colors = plt.get_cmap(color_type)(np.linspace(0.2, 0.8, len(data.keys())))
 
     new_data = []
+    new_raw_data = []
     handlers = []
     for index in range(len(data.keys())):
         if legend != None:
             legend_key = legends_keys[index]
             label = legend[legend_key]
-            new_data.append(data.get(legend_key))
+            new_data.append(data.get(legend_key, 0))
+            if raw_data:
+                new_raw_data.append(raw_data.get(legend_key, 0))
             handlers.append(mpatches.Patch(color=colors[index], label=label))
         else:
-            new_data.append(data.popitem())
+            new_data.append(data.popitem()[1])
+            if raw_data:
+                new_raw_data.append(raw_data.popitem()[1])
             handlers.append(mpatches.Patch(color=colors[index]))
 
-    return (new_data, handlers, colors, max_value)
+    max_value = max(new_data)
+
+    return (new_data, new_raw_data, handlers, colors, max_value)
+
+
+def make_autopct(values, total_data=None):
+    def my_autopct(pct):
+        if total_data:
+            total = total_data
+        else:
+            total = sum(values)
+        val = int(round(pct * total / 100.0))
+        return "{p:.2f}%  ({v:d})".format(p=pct, v=val)
+
+    return my_autopct
 
 
 def pie(
     title: str,
     data: dict,
+    raw_data=None,
+    total_data=None,
     legend=None,
     legend_title=None,
     y_label=None,
     x_label=None,
     color_type=COLOR_TYPE_BLUE,
 ):
-    (new_data, handlers, colors, _) = chart_header(data, legend, color_type)
-
-
-    def absolute_value(value):
-        sizes = np.array([item for item in data.values()])
-        return np.round(value / 100.0 * sizes.sum(), 0)
+    (new_data, new_raw_data, handlers, colors, _) = chart_header(
+        data, raw_data, legend, color_type
+    )
 
     fig, ax = plt.subplots()
     ax.pie(
@@ -83,7 +102,7 @@ def pie(
         radius=3,
         center=(4, 4),
         wedgeprops={"linewidth": 1, "edgecolor": "white"},
-        autopct=absolute_value,
+        autopct=make_autopct(new_raw_data, total_data) if raw_data else "%.1f",
         frame=True,
     )
 
@@ -119,6 +138,8 @@ def pie(
 def bar(
     title: str,
     data: dict,
+    raw_data=None,
+    total_data=None,
     legend: list = None,
     legend_title=None,
     x_label=None,
@@ -126,16 +147,18 @@ def bar(
     y_label=None,
     color_type=COLOR_TYPE_BLUE,
 ):
-    (new_data, handlers, colors, max_value) = chart_header(data, legend, color_type)
+    (new_data, new_raw_data, handlers, colors, max_value) = chart_header(
+        data, raw_data, legend, color_type
+    )
 
     if type(x_label_item) == str:
         x_label_item = ["%d%s" % (i, x_label_item) for i in range(len(new_data))]
 
     x = x_label_item if x_label_item else 0.5 + np.arange(len(new_data))
-    y = data.values()
+    y = new_data
 
     fig, ax = plt.subplots()
-    ax.bar(
+    bar_container = ax.bar(
         x,
         y,
         width=0.7,
@@ -143,7 +166,15 @@ def bar(
         linewidth=1,
         color=colors,
     )
+
+    if raw_data:
+        ax.bar_label(bar_container, fmt=make_autopct(new_raw_data, total_data))
+    else:
+        ax.bar_label(bar_container, fmt="{:,.1f}")
+
     ax.set_title(title)
+
+    ax.grid(color="#cccccc", linestyle="dashed", linewidth="0.5")
 
     if y_label:
         ax.set_ylabel(y_label)
@@ -153,7 +184,9 @@ def bar(
 
     ax.set(
         xlim=(0, 1),
-        xticks=np.arange(1, len(new_data) + 1),
+        xticks=np.arange(
+            1, len(new_raw_data if len(new_raw_data) > 0 else new_data) + 1
+        ),
         ylim=(0, max_value + 2),
         yticks=np.arange(1, max_value + 2),
     )

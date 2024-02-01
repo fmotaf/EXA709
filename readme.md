@@ -1,4 +1,5 @@
-EXA709
+# EXA709
+
 Análise de dados do questionário relacionado a uso de internet 
 entre os estudantes da UEFS
 
@@ -15,8 +16,8 @@ Instalação
 
 Clone o Repositório:
 ```
-  git clone https://github.com/seu-usuario/seu-projeto.git
-  cd seu-projeto
+  git clone https://github.com/fmotaf/EXA709
+  cd EXA709
 ```
 
 Instale o ambiente virtual (Opcional):
